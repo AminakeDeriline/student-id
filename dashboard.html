@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student ID Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        /* 1. RESET BODY */
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background:
+                radial-gradient(circle at top right, rgba(191, 219, 254, 0.55), transparent 30%),
+                linear-gradient(135deg, #eef5ff 0%, #f8fbff 48%, #eaf3ff 100%);
+        }
+
+        /* 2. THE MENU BAR (FULL WIDTH) */
+        .menu-bar {
+            background-color: #ffffff;
+            width: 100%;
+            /* Stretches to both edges */
+            height: 50px;
+            display: flex;
+            align-items: center;
+            padding: 0 40px;
+            /* Padding for the text inside */
+            box-sizing: border-box;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            font-weight: 700;
+            color: #1e293b;
+            font-size: 1.2rem;
+            position: sticky;
+            /* Stays at the top when scrolling */
+            top: 0;
+            z-index: 1000;
+        }
+
+        .menu-bar :hover {
+            color: #9bbcff;
+
+        }
+
+        /* 3. THE CENTERED CONTAINER (FOR THE FORM ONLY) */
+        .content-container {
+            width: 100%;
+            max-width: 780px;
+            /* Limits the form width for readability */
+            margin: 40px auto;
+            /* Centers the form on the page */
+            padding: 0 20px;
+            box-sizing: border-box;
+            transition: filter 0.2s ease, opacity 0.2s ease;
+        }
+
+        body.menu-open .content-container {
+            filter: blur(2px);
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        /* FORM STYLING */
+        form {
+            background: transparent;
+            width: 100%;
+        }
+
+        .heading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .icon-box {
+            width: 64px;
+            height: 64px;
+            border-radius: 18px;
+            background: #dbeafe;
+            color: #1d4ed8;
+            display: grid;
+            place-items: center;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .heading h1 {
+            margin: 0;
+            font-size: 2rem;
+            color: #0f172a;
+        }
+
+        .subtitle {
+            color: #64748b;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        /* INPUTS & LAYOUT */
+        .field {
+            margin-bottom: 20px;
+        }
+
+        .field label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .photo-row {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            padding: 15px;
+            border-radius: 15px;
+        }
+
+        .photo-input {
+            flex: 1;
+            min-width: 0;
+            width: 100%;
+        }
+
+        .photo-input input[type="file"] {
+            width: 100% !important;
+        }
+
+        .photo-box {
+            width: 100px;
+            height: 100px;
+            border-radius: 10px;
+            background: #f1f5f9;
+            display: grid;
+            place-items: center;
+            border: 2px solid #9bbcff;
+            flex-shrink: 0;
+        }
+
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            height: 50px;
+            padding: 0 15px;
+            border-radius: 12px;
+            border: 1px solid #cbd5e1;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            height: 55px;
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            z-index: 1001;
+            background-color: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+        }
+
+        .dropdown-content .logout {
+            color: #ef4444;
+        }
+
+        .dropdown-content .logout:hover {
+            background-color: #b91c1c30;
+            border-radius: 10px;
+
+        }
+
+        .dropdown-content {
+            height: calc(100vh - 50px);
+            width: 200px;
+        }
+
+        .dropdown-content li {
+            color: #1d4ed8;
+        }
+
+        .dropdown-content li:hover {
+            background-color: #e2e8f0;
+            border-radius: 10px;
+        }
+
+        .dropdown-content li .active {
+            background-color: #93c5fd;
+            color: white;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 500px) {
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+
+            .menu-bar {
+                padding: 0 20px;
+            }
+
+            .photo-row {
+                gap: 10px;
+                align-items: flex-start;
+                padding: 8px 0;
+            }
+
+            .photo-box {
+                width: 92px;
+                height: 92px;
+            }
+
+            .photo-input {
+                flex: 1;
+                min-width: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="menu-bar" onclick="toggleDropdown()">
+        <div class="dashboard-icon" style="gap: 3px;"><i class="fa-solid fa-bars"></i></div>
+        Dashboard
+    </div>
+
+    <div class="dropdown-content" id="dropdown-content"
+        style="display: none; position: absolute; z-index: 1001; background-color: white; padding: 10px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
+        <ul style="list-style: none; margin: 0; padding: 0;">
+            <li class="active" style="padding: 8px 12px; cursor: pointer;"
+                onclick="window.location.href = 'dashboard.html'">
+                <i class="fa-solid fa-id-card"></i> Create ID
+            </li>
+            <li class="profile" style="padding: 8px 12px; cursor: pointer;" onclick="window.location.href = 'card.php'">
+                <i class="fa-solid fa-download"></i> Download ID
+            </li>
+            <li class="history" style="padding: 8px 12px; cursor: pointer;"
+                onclick="window.location.href = 'history.php'"><i class="fa-solid fa-clock"></i>History</li>
+            <li class="logout" style="padding: 8px 12px; cursor: pointer;"
+                onclick="window.location.href = 'logout.php'"><i class="fa-solid fa-sign-out-alt"></i>Logout</li>
+
+
+        </ul>
+    </div>
+
+    <div class="content-container">
+        <form action="connect_info.php" method="POST" enctype="multipart/form-data">
+            <div class="heading">
+                <div class="icon-box"><i class="fa-solid fa-id-card"></i></div>
+                <h1>Student ID Generator</h1>
+            </div>
+            <p class="subtitle">Fill in your details and generate a downloadable student ID card.</p>
+
+            <div class="field">
+                <label>Photo</label>
+                <div class="photo-row">
+                    <div class="photo-box" id="photo-box">No photo</div>
+                    <div class="photo-input">
+                        <input type="file" name="photo" accept="image/*" required style="background-color: white; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; box-sizing: border-box;">
+                        <p style="margin: 5px 0 0; font-size: 0.8rem; color: #94a3b8;">Upload passport photo</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <label>Full Name</label>
+                <input type="text" name="name" placeholder="John Doe" required>
+            </div>
+
+            <div class="two-columns">
+                <div class="field">
+                    <label>Level</label>
+                    <select name="level" required>
+                        <option value="100">100</option>
+                        <option value="200">200</option>
+                        <option value="300">300</option>
+                        <option value="400">400</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Sex</label>
+                    <select name="sex" required>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="field">
+                <label>Matricule</label>
+                <input type="text" name="matricule" placeholder="Enter your matricule" required>
+            </div>
+
+            <div class="field">
+                <label>Department</label>
+                <input type="text" name="department" placeholder="Computer Science" required>
+            </div>
+
+            <button type="submit">Create ID Card</button>
+        </form>
+    </div>
+
+    <script>
+        function toggleDropdown() {
+            var dropdown = document.getElementById("dropdown-content");
+            if (dropdown.style.display === "block") {
+                dropdown.style.display = "none";
+                document.body.classList.remove("menu-open");
+            } else {
+                dropdown.style.display = "block";
+                document.body.classList.add("menu-open");
+            }
+
+        }
+
+        const photoInput = document.querySelector('.photo-input input[type="file"]');
+        const photoBox = document.getElementById('photo-box');
+
+        photoInput.addEventListener('change', function () {
+            const file = this.files[0];
+            if (!file) return;
+
+            const imageUrl = URL.createObjectURL(file);
+            photoBox.style.backgroundImage = `url(${imageUrl})`;
+            photoBox.style.backgroundSize = 'cover';
+            photoBox.style.backgroundPosition = 'center';
+            photoBox.textContent = '';
+        });
+
+        function createCard() {
+            // This function will be called after form submission to trigger the download of the generated ID card.
+            // You can implement the logic to handle the file download here, such as creating a link to the generated card and simulating a click on it.
+
+
+
+        }
+    </script>
+</body>
+
+</html>
